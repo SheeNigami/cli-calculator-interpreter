@@ -85,3 +85,13 @@ Main program
       
       
  ## Advanced
+ascending descending sort to be crafted manually, no reversing of list
+notes for above: pass a parameter for the list and the sorting type
+
+more operators includes logarithm and exponenetial (general mathematical thoingS?)
+
+Automated testing is like nice iguess
+
+Might implement O(1) stack idk
+
+validation handles file inputs properly
