@@ -1,4 +1,4 @@
-from helpers import validate_input, sort_expressions
+from helpers import sort_expressions
 from Expression import Expression
 
 class CLInterface:
@@ -29,11 +29,11 @@ class CLInterface:
         # If invalid input, keep prompting for input
         while exp_str is None:
             exp_str = input('Please enter the expression you want to evaluate:\n')
-            if not validate_input(exp_str): 
-                print('Please enter a valid expression\n')
+            try:
+                expression = Expression(exp_str)
+            except Exception as e:
                 exp_str = None
-
-        expression = Expression(exp_str)
+                print(e)
         
 
     def get_current_selection(self):

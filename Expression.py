@@ -1,5 +1,4 @@
-import tokenize
-from io import StringIO
+from helpers import Tokenizer
 
 class Expression:
     def __init__(self, exp_str):
@@ -7,8 +6,10 @@ class Expression:
         self.__tokens = self.tokenize_exp()
 
     def tokenize_exp(self): 
-        tokens = tokenize.generate_tokens(StringIO(self.__exp_str).readline)
-        # Post process default python tokenize
-        for token in tokens:
-            print(token)
+        tokenizer = Tokenizer(self.__exp_str)
+        tokens = tokenizer.generate_tokens()
+        print(list(tokens))
         return tokens
+
+    
+
