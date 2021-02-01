@@ -4,21 +4,37 @@ from dataclasses import dataclass
 # Tokenizer's Token DataClass
 class TokenType(Enum): 
     NUMBER = 0
-    LPAREN = 1
-    RPAREN = 2
-    PLUS = 3
-    MINUS = 4
-    MULTIPLY = 5
-    DIVIDE = 6
-    EXPONENT = 7
+    PLUS = 1
+    MINUS = 2
+    MULTIPLY = 3
+    DIVIDE = 4
+    EXPONENT = 5
+    LPAREN = 6
+    RPAREN = 7
+
+precedences = {
+    TokenType.NUMBER : None,
+    TokenType.LPAREN : None,
+    TokenType.RPAREN : 0,
+    TokenType.PLUS : 1,
+    TokenType.MINUS : 1,
+    TokenType.MULTIPLY : 2,
+    TokenType.DIVIDE : 2,
+    TokenType.EXPONENT : 3
+}
 
 @dataclass
 class Token:
     type: TokenType
     value: any = None
+    precedence: int = None
 
+    def __post_init__(self): 
+        self.precedence = precedences[self.type]
+    
     def __repr__(self): 
-        return self.type.name + (f":{self.value}" if self.value != None else "")
+        return self.type.name + (f":{self.value}" if self.value != None else "") + f":P={self.precedence}"
+        # return self.type.name + (f":{self.value}" if self.value != None else "")
 
 
 # Tokenizer 
@@ -66,7 +82,6 @@ class Tokenizer:
                 yield Token(TokenType.RPAREN)
             # Except all other characters
             else:
-                print(self.current_char + ' is fucked up')
                 raise Exception(f"Illegal character '{self.current_char}'")
 
     # Generates numbers from each character (digit/decimal)
@@ -81,6 +96,7 @@ class Tokenizer:
             if self.current_char == '.': 
                 decimal_count += 1
                 if decimal_count > 1:
+                    # raise Exception(f"More than 1 decimal in number")
                     break
 
             # Adds digits/decimals to number_str

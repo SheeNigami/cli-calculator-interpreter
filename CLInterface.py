@@ -34,6 +34,9 @@ class CLInterface:
             except Exception as e:
                 exp_str = None
                 print(e)
+
+        exp_tree = expression.parse_tree()
+        print(exp_tree)
         
 
     def get_current_selection(self):
