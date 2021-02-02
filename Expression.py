@@ -14,6 +14,7 @@ class Expression:
         return list(tokens)
 
     # Parse tokens into tree with shunting-yard algorithm
+    # TODO: Pron turn tree into its own class with variables operator and node stack, can also separate build sub_tree method to reduce duplicate code
     def parse_tree(self):
         # Stacks to hold operators/operands for alg
         operator_stack = Stack()        
@@ -110,6 +111,7 @@ class Expression:
         elif root.get_key().type == TokenType.EXPONENT:
             return left_sum ** right_sum
 
+    # Recursively prints the various tree traversals (Preorder, Postorder, Inorder)
     def print_preorder(self, tree, depth=0): 
         if tree is not None:
             if type(tree) is not BinaryTree:
@@ -136,10 +138,5 @@ class Expression:
                 self.print_inorder(tree.get_left_tree(), depth+1)
                 print(('-') * depth + str(tree.get_key()))
                 self.print_inorder(tree.get_right_tree(), depth+1)
-
-
-
-    def has_greater_precedence(op1, op2): 
-        return op1.precedence
 
 
