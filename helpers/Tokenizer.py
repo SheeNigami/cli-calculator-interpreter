@@ -14,7 +14,7 @@ class TokenType(Enum):
 
 precedences = {
     TokenType.NUMBER : None,
-    TokenType.LPAREN : None,
+    TokenType.LPAREN : None, # Need to find a good value for this
     TokenType.RPAREN : 0,
     TokenType.PLUS : 1,
     TokenType.MINUS : 1,
@@ -33,8 +33,8 @@ class Token:
         self.precedence = precedences[self.type]
     
     def __repr__(self): 
-        return self.type.name + (f":{self.value}" if self.value != None else "") + f":P={self.precedence}"
-        # return self.type.name + (f":{self.value}" if self.value != None else "")
+        # return self.type.name + (f":{self.value}" if self.value != None else "") + f":P={self.precedence}"
+        return self.type.name + (f":{self.value}" if self.value != None else "")
 
 
 # Tokenizer 

@@ -36,7 +36,13 @@ class CLInterface:
                 print(e)
 
         exp_tree = expression.parse_tree()
-        print(exp_tree)
+        print('\nPreorder Expression Tree:')
+        expression.print_preorder(exp_tree)
+        print('\nPostorder Expression Tree:')
+        expression.print_postorder(exp_tree)
+        print('\nInorder Expression Tree:')
+        expression.print_inorder(exp_tree)
+        print(f'Expression evaluates to:\n{expression.evaluate(exp_tree):.2f}')
         
 
     def get_current_selection(self):

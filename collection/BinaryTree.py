@@ -29,3 +29,8 @@ class BinaryTree:
         else:
             t =BinaryTree(key)
             self.rightTree , t.rightTree = t, self.rightTree
+
+    # def __str__(self): 
+    #     to_print = '    ' + str(self.get_key) + '    \n'
+    #     to_print += str(self.get_left_tree) + '    ' + str(self.get_right_tree)
+    #     return to_print
