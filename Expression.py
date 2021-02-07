@@ -5,6 +5,8 @@ class Expression:
     def __init__(self, exp_str):
         self.__exp_str = exp_str
         self.__tokens = self.tokenize_exp()
+        self.__tree_root = None
+        self.val = None
 
     # Tokenize Expression with our tokenizer
     def tokenize_exp(self): 
@@ -83,32 +85,33 @@ class Expression:
         print('Node Stack: ' + str(node_stack.stack_list))
 
         # Return built expression tree
-        tree = node_stack.get()
-        print('DONE TREE: ' + str(tree))
-        return tree
+        self.__tree_root = node_stack.get()
+        print('DONE TREE: ' + str(self.__tree_root))
+        self.val = self.evaluate(self.__tree_root)
+        return
 
-    def evaluate(self, root): 
+    def evaluate(self, binary_tree_node): 
         # Empty Tree
-        if root is None:
+        if binary_tree_node is None:
             return 0
 
         # Is a leaf node (Reached bottom)
-        if type(root) is not BinaryTree:
-            return root.value
+        if type(binary_tree_node) is not BinaryTree:
+            return binary_tree_node.value
 
-        left_sum = self.evaluate(root.get_left_tree())
-        right_sum = self.evaluate(root.get_right_tree())
+        left_sum = self.evaluate(binary_tree_node.get_left_tree())
+        right_sum = self.evaluate(binary_tree_node.get_right_tree())
 
         # Apply operations
-        if root.get_key().type == TokenType.PLUS:
+        if binary_tree_node.get_key().type == TokenType.PLUS:
             return left_sum + right_sum
-        elif root.get_key().type == TokenType.MINUS:
+        elif binary_tree_node.get_key().type == TokenType.MINUS:
             return left_sum - right_sum
-        elif root.get_key().type == TokenType.MULTIPLY:
+        elif binary_tree_node.get_key().type == TokenType.MULTIPLY:
             return left_sum * right_sum
-        elif root.get_key().type == TokenType.DIVIDE:
+        elif binary_tree_node.get_key().type == TokenType.DIVIDE:
             return left_sum / right_sum
-        elif root.get_key().type == TokenType.EXPONENT:
+        elif binary_tree_node.get_key().type == TokenType.EXPONENT:
             return left_sum ** right_sum
 
     # Recursively prints the various tree traversals (Preorder, Postorder, Inorder)
