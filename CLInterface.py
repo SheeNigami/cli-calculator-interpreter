@@ -1,4 +1,4 @@
-from helpers import validate_input, sort_expressions
+from helpers import sort_expressions
 from Expression import Expression
 
 class CLInterface:
@@ -32,30 +32,100 @@ class CLInterface:
 
     # Evaluates Input Expression (Selection 1)
     def evaluate_expression(self):
+        exp_str = None
         # If invalid input, keep prompting for input
-        while True:
+        while exp_str is None:
             exp_str = input('Please enter the expression you want to evaluate:\n')
-            if not validate_input(exp_str): 
-                print('Please enter a valid expression\n')
+            try:
+                exp_str.replace(' ', '')
+                expression = Expression(exp_str)
+                expression.parse_tree()
+            except Exception as e:
                 exp_str = None
-            else:
-                break
-
-        expression = Expression(exp_str)
+                print(e)
 
         orderprint_selection = self.__print_order_selection()
 
-        value = None #expression.evaluate_expression()
+        if orderprint_selection == 1:
+            expression.print_preorder()
+        elif orderprint_selection == 2:
+            expression.print_inorder()
+        elif orderprint_selection == 3:
+            expression.print_postorder()
 
-        #expression.printorder(orderprint_selection)
-
-        print("\n Expression evaluates to:\n{}", value)
+        print("\n Expression evaluates to:\n{}", expression.val)
 
     # Read Write File and Evaluate Expression (Selection 2)
     def sort_evaluate_expression(self):
-        readfile = input("Please enter input file:")
-        outfile = input("Please enter output file:")
-                
+        #input file prompt
+        while True:
+            try:
+                readfile = input("Please enter input file:")
+                input_file = open('./input/'+readfile, 'r')
+                input_file = input_file.read()
+            except:
+                print("The file does not exist. Please enter a valid input (e.g. input.txt)")
+                continue
+            break
+        
+        #output file prompt
+        while True:
+            outfile = input("Please enter output file:")
+
+            if outfile[-4:] != '.txt':
+                print("Not a valid filename. Please enter a valid filename ending with .txt (e.g. output.txt)")
+                continue
+
+            try:
+                output_file = open('./output/'+outfile, 'w')
+            except:
+                print('Not a valid filename. Please enter a valid filename (e.g. output.txt)\nA valid filename cannot include * . " / \ [ ] : ; | ,')
+                continue
+        
+        print(">>>Evaluation and sorting started:\n")
+
+        exp_list = []
+        input_file = input_file.splitlines()
+        for i in range(len(input_file)):
+            try:
+                input_file[i].replace(' ', '')
+                expression = Expression(input_file[i])
+                expression.parse_tree()
+            except Exception as e:
+                print(e)
+                print("Invalid expression at line "+(i+1)+". Skipping expression")
+                continue
+            exp_list.append(expression)
+               
+        #sorting prompt
+        #built prompt
+        prompt = "Please select your choice ('1','2')"
+        prompt += '\n   1. Sort ascending'
+        prompt += '\n   2. Sort descending'
+        prompt += '\nEnter choice: '
+
+        #input and check for 1, 2
+        while ascending_check not in ['1', '2']:
+            ascending_check = input(prompt)
+            if ascending_check not in ['1', '2']:
+                print("Invalid input. Please input either '1' or '2'.\n")
+
+        exp_list = sort_expressions(exp_list, ascending_check)
+        
+        current_val = None
+        print_str = ""
+        for i in range(len(exp_list)):
+            if current_val != exp_list[i].val:
+                current_val = exp_list[i].val
+                print_str+= ("\n*** Expressions with value= " + current_val)
+            print_str += (exp_list[i] + "==>" + exp_list[i].val)
+
+        print(print_str)
+
+        output_file.write(print_str)
+
+        print(">>>Evaluation and sorting completed!")
+            
 
     def get_current_selection(self):
         return self.__current_selection

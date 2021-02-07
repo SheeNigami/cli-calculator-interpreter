@@ -115,7 +115,9 @@ class Expression:
             return left_sum ** right_sum
 
     # Recursively prints the various tree traversals (Preorder, Postorder, Inorder)
-    def print_preorder(self, tree, depth=0): 
+    def print_preorder(self, tree=True, depth=0):
+        if tree is True:
+            tree = self.__tree_root
         if tree is not None:
             if type(tree) is not BinaryTree:
                 print(('-') * depth + str(tree.value))
@@ -124,7 +126,9 @@ class Expression:
                 self.print_preorder(tree.get_left_tree(), depth+1)
                 self.print_preorder(tree.get_right_tree(), depth+1)
 
-    def print_postorder(self, tree, depth=0): 
+    def print_postorder(self, tree=True, depth=0):
+        if tree is True:
+            tree = self.__tree_root
         if tree is not None:
             if type(tree) is not BinaryTree:
                 print(('-') * depth + str(tree.value))
@@ -133,7 +137,9 @@ class Expression:
                 self.print_postorder(tree.get_right_tree(), depth+1)
                 print(('-') * depth + str(tree.get_key()))
 
-    def print_inorder(self, tree, depth=0): 
+    def print_inorder(self, tree=True, depth=0): 
+        if tree is True:
+            tree = self.__tree_root
         if tree is not None:
             if type(tree) is not BinaryTree:
                 print(('-') * depth + str(tree.value))

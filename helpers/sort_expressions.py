@@ -17,7 +17,7 @@ def mergeSort(input_list, ascending_check):
         mergeList = input_list
 
         #checking for ascend descend
-        if ascending_check == 1:
+        if ascending_check == '1':
             #sorts ascending
             while leftIndex < len(leftHalf) and rightIndex < len(rightHalf):
                 if leftHalf[leftIndex] < rightHalf[rightIndex]:
