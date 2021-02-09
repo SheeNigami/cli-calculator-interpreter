@@ -1,5 +1,6 @@
 from helpers import sort_expressions
 from Expression import Expression
+from collection import SortedList
 
 class CLInterface:
     def __init__(self):
@@ -83,21 +84,22 @@ class CLInterface:
                 continue
         
         print(">>>Evaluation and sorting started:\n")
-
-        exp_list = []
+               
         input_file = input_file.splitlines()
-        for i in range(len(input_file)):
-            try:
-                input_file[i].replace(' ', '')
-                expression = Expression(input_file[i])
-                expression.parse_tree()
-            except Exception as e:
-                print(e)
-                print("Invalid expression at line "+(i+1)+". Skipping expression")
-                continue
-            exp_list.append(expression)
                
         #sorting prompt
+        #built prompt
+        prompt = "Please select your choice ('1','2')"
+        prompt += '\n   1. Sorted list'
+        prompt += '\n   2. Merge sort'
+        prompt += '\nEnter choice: '
+
+        #input and check for 1, 2
+        while ascending_check not in ['1', '2']:
+            sort_method = input(prompt)
+            if ascending_check not in ['1', '2']:
+                print("Invalid input. Please input either '1' or '2'.\n")
+
         #built prompt
         prompt = "Please select your choice ('1','2')"
         prompt += '\n   1. Sort ascending'
@@ -110,7 +112,32 @@ class CLInterface:
             if ascending_check not in ['1', '2']:
                 print("Invalid input. Please input either '1' or '2'.\n")
 
-        exp_list = sort_expressions(exp_list, ascending_check)
+        if sort_method == '1':
+            exp_list = SortedList(ascending_check)
+            for i in range(len(input_file)):
+                try:
+                    input_file[i].replace(' ', '')
+                    expression = Expression(input_file[i])
+                    expression.parse_tree()
+                except Exception as e:
+                    print(e)
+                    print("Invalid expression at line "+(i+1)+". Skipping expression")
+                    continue
+                exp_list.insert(expression)
+
+        elif sort_method == '2':
+            exp_list = []
+            for i in range(len(input_file)):
+                try:
+                    input_file[i].replace(' ', '')
+                    expression = Expression(input_file[i])
+                    expression.parse_tree()
+                except Exception as e:
+                    print(e)
+                    print("Invalid expression at line "+(i+1)+". Skipping expression")
+                    continue
+                exp_list.append(expression)
+            exp_list = sort_expressions(exp_list, ascending_check)
         
         current_val = None
         print_str = ""

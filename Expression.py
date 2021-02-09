@@ -1,8 +1,14 @@
 from helpers import Tokenizer, TokenType
 from collection import Stack, BinaryTree
 
-class Expression:
+class Node:
+    # Constructor
+    def __init__(self):
+        self.nextNode = None
+
+class Expression(Node):
     def __init__(self, exp_str):
+        super().__init__()
         self.__exp_str = exp_str
         self.__tokens = self.tokenize_exp()
         self.__tree_root = None
@@ -154,6 +160,11 @@ class Expression:
             return self.val < other.val
         else:
             return len(str(self)) < len(str(other))
+    def __gt__(self):
+        if self.val != other.val:
+            return self.val > other.val
+        else:
+            return len(str(self)) > len(str(other))
     
     def __str__(self):
         return self.__exp_str
