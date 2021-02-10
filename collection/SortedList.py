@@ -53,6 +53,7 @@ class SortedList:
                 rightNode = rightNode.nextNode
             # Once we reach here it must be added at the tail
             leftNode.nextNode = newNode
+
     def __str__(self):
         # We start at the head
         output =""
