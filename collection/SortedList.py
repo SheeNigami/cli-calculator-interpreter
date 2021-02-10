@@ -17,7 +17,7 @@ class SortedList:
         if self.headNode == None:
             self.headNode = newNode
             return
-        if self.ascending_check == '1'
+        if self.ascending_check == '1':
             # Check if it is going to be new head
             if newNode < self.headNode:
                 self.__appendToHead(newNode)
