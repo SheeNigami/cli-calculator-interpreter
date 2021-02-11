@@ -155,12 +155,12 @@ class Expression(Node):
                 self.print_inorder(tree.get_right_tree(), depth+1)
 
     # Overloading operators
-    def __lt__(self):
+    def __lt__(self, other):
         if self.val != other.val:
             return self.val < other.val
         else:
             return len(str(self)) < len(str(other))
-    def __gt__(self):
+    def __gt__(self, other):
         if self.val != other.val:
             return self.val > other.val
         else:

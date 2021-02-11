@@ -47,11 +47,11 @@ class CLInterface:
 
         orderprint_selection = self.__print_order_selection()
 
-        if orderprint_selection == '1':
+        if orderprint_selection == "1":
             expression.print_preorder()
-        elif orderprint_selection == '2':
+        elif orderprint_selection == "2":
             expression.print_inorder()
-        elif orderprint_selection == '3':
+        elif orderprint_selection == "3":
             expression.print_postorder()
         else:
             print()
@@ -96,10 +96,13 @@ class CLInterface:
         prompt += '\n   2. Merge sort'
         prompt += '\nEnter choice: '
 
+        sort_method = None
+        ascending_check = None
+
         #input and check for 1, 2
-        while ascending_check not in ['1', '2']:
+        while sort_method not in ['1', '2']:
             sort_method = input(prompt)
-            if ascending_check not in ['1', '2']:
+            if sort_method not in ['1', '2']:
                 print("Invalid input. Please input either '1' or '2'.\n")
 
         #built prompt
