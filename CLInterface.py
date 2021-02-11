@@ -45,7 +45,12 @@ class CLInterface:
                 exp_str = None
                 print(e)
 
-        orderprint_selection = self.__print_order_selection()
+        while True:
+            orderprint_selection = self.__print_order_selection()
+            if orderprint_selection in ['1', '2', '3']:
+                break
+            print("Invalid input. Please input either '1', '2' or '3'.\n")
+
 
         if orderprint_selection == "1":
             expression.print_preorder()
@@ -53,10 +58,8 @@ class CLInterface:
             expression.print_inorder()
         elif orderprint_selection == "3":
             expression.print_postorder()
-        else:
-            print()
 
-        print("\nExpression evaluates to:\n", expression.val)
+        print("\nExpression evaluates to:\n{:.4f}".format(expression.val))
 
     # Read Write File and Evaluate Expression (Selection 2)
     def sort_evaluate_expression(self):
