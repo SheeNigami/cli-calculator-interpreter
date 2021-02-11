@@ -47,14 +47,16 @@ class CLInterface:
 
         orderprint_selection = self.__print_order_selection()
 
-        if orderprint_selection == 1:
+        if orderprint_selection == '1':
             expression.print_preorder()
-        elif orderprint_selection == 2:
+        elif orderprint_selection == '2':
             expression.print_inorder()
-        elif orderprint_selection == 3:
+        elif orderprint_selection == '3':
             expression.print_postorder()
+        else:
+            print()
 
-        print("\n Expression evaluates to:\n{}", expression.val)
+        print("\nExpression evaluates to:\n", expression.val)
 
     # Read Write File and Evaluate Expression (Selection 2)
     def sort_evaluate_expression(self):

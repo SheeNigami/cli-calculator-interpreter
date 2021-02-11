@@ -96,8 +96,8 @@ class Tokenizer:
             if self.current_char == '.': 
                 decimal_count += 1
                 if decimal_count > 1:
-                    # raise Exception(f"More than 1 decimal in number")
-                    break
+                    raise Exception(f"More than 1 decimal in number")
+                    # break
 
             # Adds digits/decimals to number_str
             number_str += self.current_char
