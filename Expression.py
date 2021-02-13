@@ -197,13 +197,29 @@ class Expression(Node):
     def __lt__(self, other):
         if self.val != other.val:
             return self.val < other.val
-        else:
+        elif len(str(self)) != len(str(other)):
             return len(str(self)) < len(str(other))
+        elif str(self).count("+") != str(other).count("+"):
+            return str(self).count("+") < str(other).count("+")
+        elif str(self).count("+") != str(other).count("-"):
+            return str(self).count("+") < str(other).count("-")
+        elif str(self).count("+") != str(other).count("*"):
+            return str(self).count("+") < str(other).count("*")
+        elif str(self).count("+") != str(other).count("/"):
+            return str(self).count("+") < str(other).count("/")
     def __gt__(self, other):
         if self.val != other.val:
             return self.val > other.val
-        else:
+        elif len(str(self)) != len(str(other)):
             return len(str(self)) > len(str(other))
+        elif str(self).count("+") != str(other).count("+"):
+            return str(self).count("+") > str(other).count("+")
+        elif str(self).count("+") != str(other).count("-"):
+            return str(self).count("+") > str(other).count("-")
+        elif str(self).count("+") != str(other).count("*"):
+            return str(self).count("+") > str(other).count("*")
+        elif str(self).count("+") != str(other).count("/"):
+            return str(self).count("+") > str(other).count("/")
     
     def __str__(self):
         return self.__exp_str
