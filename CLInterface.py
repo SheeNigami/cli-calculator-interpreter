@@ -132,7 +132,6 @@ class CLInterface:
         print_str = ""
 
         # building of final print and output write string
-
         if sort_by_value == None:
             for i in range(len(exp_list)):
                 # if the current value not yet been printined print
@@ -145,7 +144,7 @@ class CLInterface:
             for i in range(len(exp_list)):
                 # if the current value not yet been printined print
                 if current_val != exp_list[i].sort_value_count():
-                    print_str+= "\n\n*** Expressions with a total of {} {}\n".format(exp_list[i].sort_value_count(), sort_by_value)
+                    print_str+= "\n\n*** Expressions with a total of {}x '{}'s\n".format(exp_list[i].sort_value_count(), sort_by_value)
                     current_val = exp_list[i].sort_value_count()
                 # always prints expression=>value
                 print_str += ("{}==>{:.3f}\n".format(str(exp_list[i]), exp_list[i].val))

@@ -9,7 +9,7 @@ class Node:
 class Expression(Node):
     def __init__(self, exp_str):
         super().__init__()
-        self.__exp_str = exp_str
+        self.__exp_str = exp_str.replace(" ",  '')
         self.__tokens = self.tokenize_exp()
         self.__tree_root = None
         self.val = None
@@ -65,18 +65,7 @@ class Expression(Node):
                         and ((token.type != TokenType.EXPONENT and operator_stack.get().precedence >= token.precedence)
                                 or (token.type is TokenType.EXPONENT and operator_stack.get().precedence > token.precedence) )
                     ):
-                        # Parent node (top operator from stack)
-                        parent = operator_stack.pop()
-
-                        # Get top operands from stack
-                        n1 = node_stack.pop()
-                        n2 = node_stack.pop()
-
-                        # Add subnodes to tree
-                        sub_tree = BinaryTree(parent, n2, n1)
-
-                        # Append to whole tree (node stack)
-                        node_stack.push(sub_tree)
+                        operator_stack, node_stack = self.make_subtree(operator_stack, node_stack)
 
                     # Push currrent token to operator stack
                     operator_stack.push(token)
@@ -88,12 +77,7 @@ class Expression(Node):
                     raise Exception(f"Expected Operator after {prev_token}")
                 # Pop all until LPAREN found
                 while (not operator_stack.isEmpty() and operator_stack.get().type != TokenType.LPAREN):
-                    parent = operator_stack.pop()
-                    right = node_stack.pop()
-                    left = node_stack.pop()
-
-                    sub_tree = BinaryTree(parent, left, right)
-                    node_stack.push(sub_tree)
+                    operator_stack, node_stack = self.make_subtree(operator_stack, node_stack)
 
                 # Remove LPAREN
                 operator_stack.pop()
@@ -102,20 +86,7 @@ class Expression(Node):
 
         # Empty and build/connect rest of the tree after finishing all tokens
         while (not operator_stack.isEmpty()): 
-            parent = operator_stack.pop()
-
-            if parent.type == TokenType.LPAREN or parent.type == TokenType.RPAREN:
-                raise Exception("Parentheses are mismatched.")
-
-            right = node_stack.pop()
-            left = node_stack.pop()
-
-            if parent == None or right == None or left == None:
-                raise Exception("mismatched expression")
-
-            sub_tree = BinaryTree(parent, left, right)
-            node_stack.push(sub_tree)
-
+            operator_stack, node_stack = self.make_subtree(operator_stack, node_stack)
 
         # Return built expression tree
         self.__tree_root = node_stack.get()
@@ -123,6 +94,32 @@ class Expression(Node):
         self.val = self.evaluate(self.__tree_root)
         return
 
+    # Makes subtree from stacks
+    def make_subtree(self, operator_stack, node_stack): 
+        # Parent node (top operator from stack)
+        parent = operator_stack.pop()
+
+        # Tree cannot have parentheses
+        if parent.type == TokenType.LPAREN or parent.type == TokenType.RPAREN:
+            raise Exception("Parentheses are mismatched.")
+
+        # Get top operands from stack
+        right = node_stack.pop()
+        left = node_stack.pop()
+
+        # Make sure no NoneTypes for subtree
+        if parent == None or right == None or left == None:
+            raise Exception("Ending with an operator")
+
+        # Add subnodes to tree
+        sub_tree = BinaryTree(parent, left, right)
+
+        # Append to whole tree (node stack)
+        node_stack.push(sub_tree)
+
+        return operator_stack, node_stack
+
+    # Evaluate expression
     def evaluate(self, binary_tree_node): 
         # Empty Tree
         if binary_tree_node is None:
