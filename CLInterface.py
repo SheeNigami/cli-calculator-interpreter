@@ -42,6 +42,7 @@ class CLInterface:
                 expression = Expression(exp_str)
                 expression.parse_tree()
             except Exception as e:
+                exp_str = None
                 print(e)
 
         orderprint_selection = self.__print_order_selection()
