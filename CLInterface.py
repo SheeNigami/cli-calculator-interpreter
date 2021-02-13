@@ -45,8 +45,8 @@ class CLInterface:
                 exp_str = None
                 print(e)
 
+        # checking for print order
         orderprint_selection = self.__print_order_selection()
-
 
         if orderprint_selection == "1":
             expression.print_preorder()
@@ -55,6 +55,13 @@ class CLInterface:
         elif orderprint_selection == "3":
             expression.print_postorder()
 
+        # writes into a history file
+        with open('./history.txt', 'a') as history_file:
+            history_file.write("Expression {} evaluates to: {:.4f}\n".format(str(expression), expression.val))
+        with open('./input/input_history.txt', 'a') as history_file:
+            history_file.write(str(expression))
+
+        # printing
         print("\nExpression evaluates to:\n{:.4f}".format(expression.val))
 
     # Read Write File and Evaluate Expression (Selection 2)
@@ -110,9 +117,9 @@ class CLInterface:
         for i in range(len(exp_list)):
             # if the current value not yet been printined print
             if current_val != exp_list[i].val:
-                print_str+= ("\n\n*** Expressions with value= " + str(exp_list[i].val) +"\n")
+                print_str+= "\n\n*** Expressions with value= {:.4f}\n".format(exp_list[i].val)
             # always prints expression=>value
-            print_str += (str(exp_list[i]) + "==>" + str(exp_list[i].val))
+            print_str += ("{}==>{:.4f}".format(str(exp_list[i]), exp_list[i].val))
 
         # prints actual output
         print(print_str)
