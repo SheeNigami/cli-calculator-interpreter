@@ -126,7 +126,8 @@ class Expression(Node):
             tree = self.__tree_root
         if tree is not None:
             if type(tree) is not BinaryTree:
-                print(('-') * depth + str(tree.value))
+                # print(('-') * depth + str(tree.value))
+                print(('-') * depth + str(tree))
             else:
                 print(('-') * depth + str(tree.get_key()))
                 self.print_preorder(tree.get_left_tree(), depth+1)

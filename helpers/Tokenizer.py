@@ -27,14 +27,24 @@ precedences = {
 class Token:
     type: TokenType
     value: any = None
+    rep: str = None
     precedence: int = None
 
     def __post_init__(self): 
         self.precedence = precedences[self.type]
+
     
     def __repr__(self): 
-        # return self.type.name + (f":{self.value}" if self.value != None else "") + f":P={self.precedence}"
-        return self.type.name + (f":{self.value}" if self.value != None else "")
+        representations = {
+            TokenType.LPAREN : '(', 
+            TokenType.RPAREN : ')', 
+            TokenType.PLUS : '+', 
+            TokenType.MINUS : '-', 
+            TokenType.MULTIPLY : '*', 
+            TokenType.DIVIDE : '/', 
+            TokenType.EXPONENT : '**'
+        }
+        return str(self.value) if self.value != None else representations[self.type]
 
 
 # Tokenizer 
@@ -97,7 +107,6 @@ class Tokenizer:
                 decimal_count += 1
                 if decimal_count > 1:
                     raise Exception(f"More than 1 decimal in number")
-                    # break
 
             # Adds digits/decimals to number_str
             number_str += self.current_char
