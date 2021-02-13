@@ -62,11 +62,7 @@ class CLInterface:
             history_file.write('\n' + str(expression))
 
         # printing
-<<<<<<< HEAD
-        print("\nExpression evaluates to:\n{:.4f}\n".format(expression.val))
-=======
         print("\nExpression evaluates to:\n{:.3f}".format(expression.val))
->>>>>>> f1e67a1b630045b7fd4b043755284dd0776c811d
 
     # Read Write File and Evaluate Expression (Selection 2)
     def sort_evaluate_expression(self):
