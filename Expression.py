@@ -36,11 +36,11 @@ class Expression(Node):
             # Push Operands into operand_stack, operators to operator_stack
             if token.type == TokenType.LPAREN:
                 if alg_state != 0:
-                    raise Exception(f"Invalid Expression, Expected Operand after {prev_token}")
+                    raise Exception(f"Expected Operand after {prev_token}")
                 operator_stack.push(token)
             elif token.type == TokenType.NUMBER:
                 if alg_state != 0:
-                    raise Exception(f"Invalid Expression, Expected Operand after {prev_token}")
+                    raise Exception(f"Expected Operand after {prev_token}")
                 node_stack.push(token)
                 alg_state = 1
             # For operators
@@ -48,17 +48,17 @@ class Expression(Node):
                 # If unary minus, reverse sign of next number
                 if (token.type == TokenType.MINUS) and (prev_token == None or (prev_token.type != TokenType.NUMBER and prev_token.type != TokenType.RPAREN)):
                     if alg_state != 0:
-                        raise Exception("Invalid Expression, please enter a valid expression")
+                        raise Exception(f"Expected Operand after {prev_token}")
                     for j in range(i, len(self.__tokens)):
                         if self.__tokens[j].type == TokenType.NUMBER:
                             self.__tokens[j].value = -self.__tokens[j].value
                             break
                         # No number after unary minus
                         elif j == len(self.__tokens)-1:
-                            raise Exception(f"Invalid Expression, no number after unary minus")
+                            raise Exception(f"No number after unary minus")
                 else:
                     if alg_state != 1:
-                        raise Exception(f"Invalid Expression, Expected Operator after {prev_token}")
+                        raise Exception(f"Expected Operator after {prev_token}")
 
                     # If lower or equal precendence, also handles exponent (evals right to left)
                     while (not operator_stack.isEmpty() and operator_stack.get().type != TokenType.LPAREN
@@ -85,7 +85,7 @@ class Expression(Node):
             # Handle Parenthesis
             elif token.type == TokenType.RPAREN:
                 if alg_state != 1:
-                    raise Exception(f"Invalid Expression, Expected Operator after {prev_token}")
+                    raise Exception(f"Expected Operator after {prev_token}")
                 # Pop all until LPAREN found
                 while (not operator_stack.isEmpty() and operator_stack.get().type != TokenType.LPAREN):
                     parent = operator_stack.pop()
@@ -109,13 +109,13 @@ class Expression(Node):
             parent = operator_stack.pop()
 
             if parent.type == TokenType.LPAREN or parent.type == TokenType.RPAREN:
-                raise Exception("Invalid Expression. Parentheses are mismatched.")
+                raise Exception("Parentheses are mismatched.")
 
             right = node_stack.pop()
             left = node_stack.pop()
 
             if parent == None or right == None or left == None:
-                raise Exception("Invalid Expression.")
+                raise Exception("mismatched expression")
 
             sub_tree = BinaryTree(parent, left, right)
             node_stack.push(sub_tree)
@@ -153,6 +153,8 @@ class Expression(Node):
             return left_sum * right_sum
         elif binary_tree_node.get_key().type == TokenType.DIVIDE:
             return left_sum / right_sum
+        elif binary_tree_node.get_key().type == TokenType.MODULO:
+            return left_sum % right_sum
         elif binary_tree_node.get_key().type == TokenType.EXPONENT:
             return left_sum ** right_sum
 

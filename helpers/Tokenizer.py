@@ -8,9 +8,10 @@ class TokenType(Enum):
     MINUS = 2
     MULTIPLY = 3
     DIVIDE = 4
-    EXPONENT = 5
-    LPAREN = 6
-    RPAREN = 7
+    MODULO = 5
+    EXPONENT = 6
+    LPAREN = 7
+    RPAREN = 8
 
 @dataclass
 class Token:
@@ -28,6 +29,7 @@ class Token:
             TokenType.MINUS : 1,
             TokenType.MULTIPLY : 2,
             TokenType.DIVIDE : 2,
+            TokenType.MODULO : 2,
             TokenType.EXPONENT : 3
         }
         self.precedence = precedences[self.type]
@@ -41,6 +43,7 @@ class Token:
             TokenType.MINUS : '-', 
             TokenType.MULTIPLY : '*', 
             TokenType.DIVIDE : '/', 
+            TokenType.MODULO : '%', 
             TokenType.EXPONENT : '**'
         }
         return str(self.value) if self.value != None else representations[self.type]
@@ -85,6 +88,9 @@ class Tokenizer:
             elif self.current_char == '/': 
                 self.advance()
                 yield Token(TokenType.DIVIDE)
+            elif self.current_char == '%': 
+                self.advance()
+                yield Token(TokenType.MODULO)
             elif self.current_char == '(': 
                 self.advance()
                 yield Token(TokenType.LPAREN)

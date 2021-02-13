@@ -43,7 +43,7 @@ class CLInterface:
                 expression.parse_tree()
             except Exception as e:
                 exp_str = None
-                print(e)
+                print('Invalid Expression, ' + str(e))
 
         # checking for print order
         orderprint_selection = self.__print_order_selection()
