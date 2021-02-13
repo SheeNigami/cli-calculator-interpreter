@@ -19,7 +19,7 @@ class CLInterface:
         self.__current_selection = None
 
         #built prompt
-        prompt = "Please select your choice ('1','2','3')"
+        prompt = "\nPlease select your choice ('1','2','3')"
         prompt += '\n   1. Evaluate expression'
         prompt += '\n   2. Sort expressions'
         prompt += '\n   3. Exit'
@@ -167,7 +167,7 @@ class CLInterface:
         orderprint_selection = None
 
         #built prompt
-        prompt = "Please select your choice ('1','2','3')"
+        prompt = "\nPlease select your choice ('1','2','3')"
         prompt += '\n   1. Print Preorder'
         prompt += '\n   2. Print Inorder'
         prompt += '\n   3. Print Postorder'
