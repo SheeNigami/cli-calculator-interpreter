@@ -11,4 +11,5 @@ while True:
         cli.sort_evaluate_expression()
         input("Press enter to continue... ")
     elif (cli.get_current_selection() == '3'):
+        print("BYE")
         break
