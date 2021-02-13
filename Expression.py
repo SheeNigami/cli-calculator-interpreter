@@ -37,34 +37,12 @@ class Expression(Node):
                 node_stack.push(token)
             # For operators
             elif token.precedence > 0:
-                if token.type == TokenType.MINUS:
-                    # If unary, find next number and edit it to negative
-                    if prev_token.type != TokenType.NUMBER or prev_token.type == TokenType.RPAREN:
-                        for j in range(i+1, len(self.__tokens)):
-                            if self.__tokens[j].type == TokenType.NUMBER:
-                                self.__tokens[j].value = -self.__tokens[j].value
-                                break
-                    else:
-                        # If lower or equal precendence, also handles exponent (evals right to left)
-                        while (not operator_stack.isEmpty() and operator_stack.get().type is not TokenType.LPAREN
-                            and ((token.type is not TokenType.EXPONENT and operator_stack.get().precedence >= token.precedence)
-                                    or (token.type is TokenType.EXPONENT and operator_stack.get().precedence > token.precedence) )
-                        ):
-                            # Parent node (top operator from stack)
-                            parent = operator_stack.pop()
-
-                            # Get top operands from stack
-                            n1 = node_stack.pop()
-                            n2 = node_stack.pop()
-
-                            # Add subnodes to tree
-                            sub_tree = BinaryTree(parent, n2, n1)
-
-                            # Append to whole tree (node stack)
-                            node_stack.push(sub_tree)
-
-                        # Push currrent token to operator stack
-                        operator_stack.push(token)
+                # If unary minus, reverse sign of next number
+                if (token.type == TokenType.MINUS) and ((prev_token.type != TokenType.NUMBER or prev_token.type == TokenType.RPAREN)):
+                    for j in range(i+1, len(self.__tokens)):
+                        if self.__tokens[j].type == TokenType.NUMBER:
+                            self.__tokens[j].value = -self.__tokens[j].value
+                            break
                 else:
                     # If lower or equal precendence, also handles exponent (evals right to left)
                     while (not operator_stack.isEmpty() and operator_stack.get().type is not TokenType.LPAREN
