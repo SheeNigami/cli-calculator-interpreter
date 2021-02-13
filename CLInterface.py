@@ -36,7 +36,7 @@ class CLInterface:
         exp_str = None
         # If invalid input, keep prompting for input
         while exp_str is None:
-            exp_str = input('Please enter the expression you want to evaluate:\n')
+            exp_str = input('\nPlease enter the expression you want to evaluate:\n')
             try:
                 exp_str = exp_str.replace(' ', '')
                 expression = Expression(exp_str)
@@ -57,12 +57,16 @@ class CLInterface:
 
         # writes into a history file
         with open('./history.txt', 'a') as history_file:
-            history_file.write("Expression {} evaluates to: {:.4f}\n".format(str(expression), expression.val))
+            history_file.write("Expression {} evaluates to: {:.3f}\n".format(str(expression), expression.val))
         with open('./input/input_history.txt', 'a') as history_file:
             history_file.write('\n' + str(expression))
 
         # printing
+<<<<<<< HEAD
         print("\nExpression evaluates to:\n{:.4f}\n".format(expression.val))
+=======
+        print("\nExpression evaluates to:\n{:.3f}".format(expression.val))
+>>>>>>> f1e67a1b630045b7fd4b043755284dd0776c811d
 
     # Read Write File and Evaluate Expression (Selection 2)
     def sort_evaluate_expression(self):
@@ -71,7 +75,7 @@ class CLInterface:
 
             # tries to read the file
             try:
-                readfile = input("Please enter input file:")
+                readfile = input("Please enter input file: ")
                 with open('./input/'+readfile, 'r') as input_file:
                     input_file = input_file.read()
             except:
@@ -81,7 +85,7 @@ class CLInterface:
         
         #output file prompt
         while True:
-            outfile = input("Please enter output file:")
+            outfile = input("Please enter output file: ")
 
             # checks if filename has .txt
             if outfile[-4:] != '.txt':
@@ -117,9 +121,9 @@ class CLInterface:
         for i in range(len(exp_list)):
             # if the current value not yet been printined print
             if current_val != exp_list[i].val:
-                print_str+= "\n\n*** Expressions with value= {:.4f}\n".format(exp_list[i].val)
+                print_str+= "\n\n*** Expressions with value= {:.3f}\n".format(exp_list[i].val)
             # always prints expression=>value
-            print_str += ("{}==>{:.4f}".format(str(exp_list[i]), exp_list[i].val))
+            print_str += ("{}==>{:.3f}".format(str(exp_list[i]), exp_list[i].val))
 
         # prints actual output
         print(print_str)
