@@ -31,7 +31,7 @@ class Expression(Node):
         prev_token = None
         # Alg states Expect Operand (0), Expect Operator (1), for catching invalid expressions
         alg_state = 0
-        print('Tokens: ' + str(self.__tokens))
+        # print('Tokens: ' + str(self.__tokens))
 
         for i, token in enumerate(self.__tokens):
             # Push Operands into operand_stack, operators to operator_stack
@@ -97,10 +97,10 @@ class Expression(Node):
                 operator_stack.pop()
 
             prev_token = token
-            print('\nOperator Stack: ' + str(operator_stack.stack_list))
-            print('Node Stack: ' + str(node_stack.stack_list))
+            #print('\nOperator Stack: ' + str(operator_stack.stack_list))
+            #print('Node Stack: ' + str(node_stack.stack_list))
 
-        print('\nfinishing loop')
+        #print('\nfinishing loop')
 
         # Empty and build/connect rest of the tree after finishing all tokens
         while (not operator_stack.isEmpty()): 
@@ -115,15 +115,15 @@ class Expression(Node):
             sub_tree = BinaryTree(parent, left, right)
             node_stack.push(sub_tree)
 
-            print('\nOperator Stack: ' + str(operator_stack.stack_list))
-            print('Node Stack: ' + str(node_stack.stack_list))
+        #     print('\nOperator Stack: ' + str(operator_stack.stack_list))
+        #     print('Node Stack: ' + str(node_stack.stack_list))
 
-        print('\nDONE\nOperator Stack: ' + str(operator_stack.stack_list))
-        print('Node Stack: ' + str(node_stack.stack_list))
+        # print('\nDONE\nOperator Stack: ' + str(operator_stack.stack_list))
+        # print('Node Stack: ' + str(node_stack.stack_list))
 
         # Return built expression tree
         self.__tree_root = node_stack.get()
-        print('DONE TREE: ' + str(self.__tree_root))
+        # print('DONE TREE: ' + str(self.__tree_root))
         self.val = self.evaluate(self.__tree_root)
         return
 
