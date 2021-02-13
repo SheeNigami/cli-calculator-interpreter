@@ -12,17 +12,6 @@ class TokenType(Enum):
     LPAREN = 6
     RPAREN = 7
 
-precedences = {
-    TokenType.NUMBER : None,
-    TokenType.LPAREN : None, # Need to find a good value for this
-    TokenType.RPAREN : 0,
-    TokenType.PLUS : 1,
-    TokenType.MINUS : 1,
-    TokenType.MULTIPLY : 2,
-    TokenType.DIVIDE : 2,
-    TokenType.EXPONENT : 3
-}
-
 @dataclass
 class Token:
     type: TokenType
@@ -31,6 +20,17 @@ class Token:
     precedence: int = None
 
     def __post_init__(self): 
+        precedences = {
+            TokenType.NUMBER : None,
+            TokenType.LPAREN : None, 
+            TokenType.RPAREN : 0,
+            TokenType.PLUS : 1,
+            TokenType.MINUS : 1,
+            TokenType.MULTIPLY : 2,
+            TokenType.DIVIDE : 2,
+            TokenType.EXPONENT : 3
+        }
+
         self.precedence = precedences[self.type]
 
     
