@@ -118,6 +118,7 @@ class CLInterface:
                 except Exception as e:
                     sort_by_value = None
                     print('Invalid input, ' + str(e))
+                    continue
                 break
             sort_by_value = sort_by_value[0]
 
