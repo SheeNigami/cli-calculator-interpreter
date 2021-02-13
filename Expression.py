@@ -24,26 +24,40 @@ class Expression(Node):
     # Parse tokens into tree with shunting-yard algorithm
     # TODO: Pron turn tree into its own class with variables operator and node stack, can also separate build sub_tree method to reduce duplicate code
     def parse_tree(self):
-        prev_token = None
         # Stacks to hold operators/operands for alg
         operator_stack = Stack()        
         node_stack = Stack()
+
+        prev_token = None
+        # Alg states Expect Operand (0), Expect Operator (1), for catching invalid expressions
+        alg_state = 0
         print('Tokens: ' + str(self.__tokens))
+
         for i, token in enumerate(self.__tokens):
             # Push Operands into operand_stack, operators to operator_stack
             if token.type == TokenType.LPAREN:
+                if alg_state is not 0:
+                    raise Exception(f"Invalid Expression, Expected Operand after {prev_token}")
                 operator_stack.push(token)
             elif token.type == TokenType.NUMBER:
+                if alg_state is not 0:
+                    raise Exception(f"Invalid Expression, Expected Operand after {prev_token}")
                 node_stack.push(token)
+                alg_state = 1
             # For operators
             elif token.precedence > 0:
                 # If unary minus, reverse sign of next number
-                if (token.type == TokenType.MINUS) and ((prev_token.type != TokenType.NUMBER or prev_token.type == TokenType.RPAREN)):
+                if (token.type == TokenType.MINUS) and (prev_token.type != TokenType.NUMBER or prev_token.type == TokenType.RPAREN or prev_token == None):
+                    if alg_state is not 0:
+                        raise Exception("Invalid Expression, please enter a valid expression")
                     for j in range(i+1, len(self.__tokens)):
                         if self.__tokens[j].type == TokenType.NUMBER:
                             self.__tokens[j].value = -self.__tokens[j].value
                             break
                 else:
+                    if alg_state is not 1:
+                        raise Exception(f"Invalid Expression, Expected Operator after {prev_token}")
+
                     # If lower or equal precendence, also handles exponent (evals right to left)
                     while (not operator_stack.isEmpty() and operator_stack.get().type is not TokenType.LPAREN
                         and ((token.type is not TokenType.EXPONENT and operator_stack.get().precedence >= token.precedence)
@@ -64,8 +78,12 @@ class Expression(Node):
 
                     # Push currrent token to operator stack
                     operator_stack.push(token)
+
+                    alg_state = 0
             # Handle Parenthesis
             elif token.type == TokenType.RPAREN:
+                if alg_state is not 1:
+                    raise Exception(f"Invalid Expression, Expected Operator after {prev_token}")
                 # Pop all until LPAREN found
                 while (not operator_stack.isEmpty() and operator_stack.get().type is not TokenType.LPAREN):
                     parent = operator_stack.pop()
@@ -87,6 +105,10 @@ class Expression(Node):
         # Empty and build/connect rest of the tree after finishing all tokens
         while (not operator_stack.isEmpty()): 
             parent = operator_stack.pop()
+
+            if parent.type == TokenType.LPAREN or parent.type == TokenType.RPAREN:
+                raise Exception("Invalid Expression. Parentheses are mismatched.")
+
             right = node_stack.pop()
             left = node_stack.pop()
 
