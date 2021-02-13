@@ -1,4 +1,4 @@
-from helpers import sort_expressions
+from helpers import sort_expressions, Tokenizer
 from Expression import Expression
 from collection import SortedList
 
@@ -68,7 +68,6 @@ class CLInterface:
     def sort_evaluate_expression(self):
         #input file prompt
         while True:
-
             # tries to read the file
             try:
                 readfile = input("Please enter input file: ")
@@ -82,7 +81,6 @@ class CLInterface:
         #output file prompt
         while True:
             outfile = input("Please enter output file: ")
-
             # checks if filename has .txt
             if outfile[-4:] != '.txt':
                 print("Not a valid filename. Please enter a valid filename ending with .txt (e.g. output.txt)")
@@ -96,8 +94,6 @@ class CLInterface:
                 continue
             break
         
-        print("\n\n>>>Evaluation and sorting started:\n")
-        
         # splits inputfiles by \n new lines, if file has no line breaks it is considered as one expression
 
         input_file = input_file.splitlines()
@@ -105,21 +101,53 @@ class CLInterface:
         # sorting prompt
         sort_method = self.__print_sort_selection()
         ascending_check = self.__print_asc_check()
+        sort_by = self.__print_sort_by_selection()
+
+        sort_by_value = None
+        if sort_by == "2":
+            while True:
+                sort_by_value = input('\nPlease enter the value (operator/number) you want to sort by:\n')
+                try:
+                    sort_by_value = sort_by_value.replace(' ', '')
+                    if sort_by_value == "":
+                        raise Exception("Please input a value")
+                    tokenizer = Tokenizer(sort_by_value)
+                    sort_by_value = list(tokenizer.generate_tokens())
+                    if len(sort_by_value) > 1:
+                        raise Exception("Value cannot be an expression")
+                except Exception as e:
+                    sort_by_value = None
+                    print('Invalid input, ' + str(e))
+                break
+            sort_by_value = sort_by_value[0]
+
+        print("\n\n>>>Evaluation and sorting started:\n")
 
         # parses and evauates the input_file after splitting to an array by line breaks
-        exp_list = self.__parsefile(input_file, sort_method, ascending_check)
+        exp_list = self.__parsefile(input_file, sort_method, ascending_check, sort_by_value)
         
         # defining variables for printing
         current_val = None
         print_str = ""
 
         # building of final print and output write string
-        for i in range(len(exp_list)):
-            # if the current value not yet been printined print
-            if current_val != exp_list[i].val:
-                print_str+= "\n\n*** Expressions with value= {:.3f}\n".format(exp_list[i].val)
-            # always prints expression=>value
-            print_str += ("{}==>{:.3f}".format(str(exp_list[i]), exp_list[i].val))
+
+        if sort_by_value == None:
+            for i in range(len(exp_list)):
+                # if the current value not yet been printined print
+                if current_val != exp_list[i].val:
+                    print_str+= "\n\n*** Expressions with value= {:.3f}\n".format(exp_list[i].val)
+                    current_val = exp_list[i].val
+                # always prints expression=>value
+                print_str += ("{}==>{:.3f}\n".format(str(exp_list[i]), exp_list[i].val))
+        else:
+            for i in range(len(exp_list)):
+                # if the current value not yet been printined print
+                if current_val != exp_list[i].sort_value_count():
+                    print_str+= "\n\n*** Expressions with a total of {} {}\n".format(exp_list[i].sort_value_count(), sort_by_value)
+                    current_val = exp_list[i].sort_value_count()
+                # always prints expression=>value
+                print_str += ("{}==>{:.3f}\n".format(str(exp_list[i]), exp_list[i].val))
 
         # prints actual output
         print(print_str)
@@ -137,7 +165,7 @@ class CLInterface:
     # Private functions___________________________________________________________________________________________________________________________
     
     # Parses input file to expressions
-    def __parsefile(self, input_file, sort_method, ascending_check):
+    def __parsefile(self, input_file, sort_method, ascending_check, sort_by_value):
         # checks for sorting method and creates object accordingly
         if sort_method == "1":
             exp_list = SortedList(ascending_check)
@@ -149,6 +177,7 @@ class CLInterface:
                 input_file[i].replace(' ', '')
                 expression = Expression(input_file[i])
                 expression.parse_tree()
+                expression.set_sort_value(sort_by_value)
             except Exception as e:
                 print("\nInvalid expression at line "+str(i+1)+". Skipping expression")
                 print(e)
@@ -161,6 +190,24 @@ class CLInterface:
         if sort_method == "2":
            sort_expressions(exp_list, ascending_check)
         return exp_list
+
+    # Prompts for 
+    def __print_sort_by_selection(self):
+        sort_by_selection = None
+
+        #built prompt
+        prompt = "\nPlease select your choice ('1','2')"
+        prompt += '\n   1. Sort by value then length'
+        prompt += '\n   2. Sort by count of user input'
+        prompt += '\nEnter choice: '
+
+        #input and check for 1 2 or 3
+        while sort_by_selection not in ['1', '2']:
+            sort_by_selection = input(prompt)
+            if sort_by_selection not in ['1', '2']:
+                print("Invalid input. Please input either '1' or '2'\n")
+        
+        return sort_by_selection
 
     # Prompts for print order selection
     def __print_order_selection(self):
@@ -195,7 +242,7 @@ class CLInterface:
         while sort_method not in ['1', '2']:
             sort_method = input(prompt)
             if sort_method not in ['1', '2']:
-                print("Invalid input. Please input either '1' or '2'.\n")
+                print("Invalid input. Please input either '1' or '2'\n")
         return sort_method
         
     #prompts sort type
@@ -212,7 +259,5 @@ class CLInterface:
         while ascending_check not in ['1', '2']:
             ascending_check = input(prompt)
             if ascending_check not in ['1', '2']:
-                print("Invalid input. Please input either '1' or '2'.\n")
+                print("Invalid input. Please input either '1' or '2'\n")
         return ascending_check
-
-

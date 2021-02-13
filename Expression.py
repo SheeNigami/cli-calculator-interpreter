@@ -13,6 +13,7 @@ class Expression(Node):
         self.__tokens = self.tokenize_exp()
         self.__tree_root = None
         self.val = None
+        self.sort_value = None
 
     # Tokenize Expression with our tokenizer
     def tokenize_exp(self): 
@@ -193,33 +194,43 @@ class Expression(Node):
                 print(('— ') * depth + str(tree.get_key()))
                 self.print_inorder(tree.get_right_tree(), depth+1)
 
+    # helping methods
+    def set_sort_value(self, value):
+        self.sort_value = value
+        return
+
+    def sort_value_count(self):
+        return self.__tokens.count(self.sort_value)
+
     # Overloading operators
     def __lt__(self, other):
-        if self.val != other.val:
-            return self.val < other.val
-        elif len(str(self)) != len(str(other)):
-            return len(str(self)) < len(str(other))
-        elif str(self).count("+") != str(other).count("+"):
-            return str(self).count("+") < str(other).count("+")
-        elif str(self).count("+") != str(other).count("-"):
-            return str(self).count("+") < str(other).count("-")
-        elif str(self).count("+") != str(other).count("*"):
-            return str(self).count("+") < str(other).count("*")
-        elif str(self).count("+") != str(other).count("/"):
-            return str(self).count("+") < str(other).count("/")
+        if self.sort_value == None:
+            if self.val != other.val:
+                return self.val < other.val
+            elif len(str(self)) != len(str(other)):
+                return len(str(self)) < len(str(other))
+        else:
+            if self.__tokens.count(self.sort_value) != other.__tokens.count(self.sort_value):
+                return self.__tokens.count(self.sort_value) < other.__tokens.count(self.sort_value)
+            elif self.val != other.val:
+                return self.val < other.val
+            elif len(str(self)) != len(str(other)):
+                return len(str(self)) < len(str(other))
+
+
     def __gt__(self, other):
-        if self.val != other.val:
-            return self.val > other.val
-        elif len(str(self)) != len(str(other)):
-            return len(str(self)) > len(str(other))
-        elif str(self).count("+") != str(other).count("+"):
-            return str(self).count("+") > str(other).count("+")
-        elif str(self).count("+") != str(other).count("-"):
-            return str(self).count("+") > str(other).count("-")
-        elif str(self).count("+") != str(other).count("*"):
-            return str(self).count("+") > str(other).count("*")
-        elif str(self).count("+") != str(other).count("/"):
-            return str(self).count("+") > str(other).count("/")
+        if self.sort_value == None:
+            if self.val != other.val:
+                return self.val > other.val
+            elif len(str(self)) != len(str(other)):
+                return len(str(self)) > len(str(other))
+        else:
+            if self.__tokens.count(self.sort_value) != other.__tokens.count(self.sort_value):
+                return self.__tokens.count(self.sort_value) > other.__tokens.count(self.sort_value)
+            elif self.val != other.val:
+                return self.val > other.val
+            elif len(str(self)) != len(str(other)):
+                return len(str(self)) > len(str(other))
     
     def __str__(self):
         return self.__exp_str
