@@ -9,7 +9,6 @@ class SortedList:
         oldHeadNode = self.headNode
         self.headNode = newNode
         self.headNode.nextNode = oldHeadNode
-        self.length += 1
         
     def insert(self, newNode):
         self.length += 1
@@ -54,6 +53,8 @@ class SortedList:
             # Once we reach here it must be added at the tail
             leftNode.nextNode = newNode
 
+    # overloading operator
+
     def __str__(self):
         # We start at the head
         output =""
@@ -67,3 +68,14 @@ class SortedList:
                 output += (',' + node.__str__())
                 node= node.nextNode
         return output
+
+    def __len__(self):
+        return self.length
+    
+    def __getitem__(self, key):
+        node = self.headNode
+        for i in range(key):
+            node = node.nextNode
+        return node
+
+        

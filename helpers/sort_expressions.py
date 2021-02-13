@@ -10,8 +10,8 @@ def mergeSort(input_list, ascending_check):
         leftHalf = input_list[:mid]
         rightHalf = input_list[mid:]
 
-        mergeSort(leftHalf)
-        mergeSort(rightHalf)
+        mergeSort(leftHalf, ascending_check)
+        mergeSort(rightHalf, ascending_check)
 
         leftIndex,rightIndex,mergeIndex = 0,0,0
         mergeList = input_list
