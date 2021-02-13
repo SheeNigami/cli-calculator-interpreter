@@ -19,7 +19,7 @@ class CLInterface:
         self.__current_selection = None
 
         #built prompt
-        prompt = "Please select your choice ('1','2','3')"
+        prompt = "\nPlease select your choice ('1','2','3')"
         prompt += '\n   1. Evaluate expression'
         prompt += '\n   2. Sort expressions'
         prompt += '\n   3. Exit'
@@ -59,10 +59,10 @@ class CLInterface:
         with open('./history.txt', 'a') as history_file:
             history_file.write("Expression {} evaluates to: {:.4f}\n".format(str(expression), expression.val))
         with open('./input/input_history.txt', 'a') as history_file:
-            history_file.write(str(expression))
+            history_file.write('\n' + str(expression))
 
         # printing
-        print("\nExpression evaluates to:\n{:.4f}".format(expression.val))
+        print("\nExpression evaluates to:\n{:.4f}\n".format(expression.val))
 
     # Read Write File and Evaluate Expression (Selection 2)
     def sort_evaluate_expression(self):
@@ -167,7 +167,7 @@ class CLInterface:
         orderprint_selection = None
 
         #built prompt
-        prompt = "Please select your choice ('1','2','3')"
+        prompt = "\nPlease select your choice ('1','2','3')"
         prompt += '\n   1. Print Preorder'
         prompt += '\n   2. Print Inorder'
         prompt += '\n   3. Print Postorder'
@@ -184,7 +184,7 @@ class CLInterface:
     # prompts sort
     def __print_sort_selection(self):
         #built prompt
-        prompt = "Please select your choice ('1','2')"
+        prompt = "\nPlease select your choice ('1','2')"
         prompt += '\n   1. Sorted list'
         prompt += '\n   2. Merge sort'
         prompt += '\nEnter choice: '
@@ -201,7 +201,7 @@ class CLInterface:
     #prompts sort type
     def __print_asc_check(self):
         #built prompt
-        prompt = "Please select your choice ('1','2')"
+        prompt = "\nPlease select your choice ('1','2')"
         prompt += '\n   1. Sort ascending'
         prompt += '\n   2. Sort descending'
         prompt += '\nEnter choice: '
