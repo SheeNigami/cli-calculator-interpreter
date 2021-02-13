@@ -22,7 +22,6 @@ class Expression(Node):
         return list(tokens)
 
     # Parse tokens into tree with shunting-yard algorithm
-    # TODO: Pron turn tree into its own class with variables operator and node stack, can also separate build sub_tree method to reduce duplicate code
     def parse_tree(self):
         # Stacks to hold operators/operands for alg
         operator_stack = Stack()        
@@ -36,31 +35,34 @@ class Expression(Node):
         for i, token in enumerate(self.__tokens):
             # Push Operands into operand_stack, operators to operator_stack
             if token.type == TokenType.LPAREN:
-                if alg_state is not 0:
+                if alg_state != 0:
                     raise Exception(f"Invalid Expression, Expected Operand after {prev_token}")
                 operator_stack.push(token)
             elif token.type == TokenType.NUMBER:
-                if alg_state is not 0:
+                if alg_state != 0:
                     raise Exception(f"Invalid Expression, Expected Operand after {prev_token}")
                 node_stack.push(token)
                 alg_state = 1
             # For operators
             elif token.precedence > 0:
                 # If unary minus, reverse sign of next number
-                if (token.type == TokenType.MINUS) and (prev_token.type != TokenType.NUMBER or prev_token.type == TokenType.RPAREN or prev_token == None):
-                    if alg_state is not 0:
+                if (token.type == TokenType.MINUS) and (prev_token == None or (prev_token.type != TokenType.NUMBER and prev_token.type != TokenType.RPAREN)):
+                    if alg_state != 0:
                         raise Exception("Invalid Expression, please enter a valid expression")
-                    for j in range(i+1, len(self.__tokens)):
+                    for j in range(i, len(self.__tokens)):
                         if self.__tokens[j].type == TokenType.NUMBER:
                             self.__tokens[j].value = -self.__tokens[j].value
                             break
+                        # No number after unary minus
+                        elif j == len(self.__tokens)-1:
+                            raise Exception(f"Invalid Expression, no number after unary minus")
                 else:
-                    if alg_state is not 1:
+                    if alg_state != 1:
                         raise Exception(f"Invalid Expression, Expected Operator after {prev_token}")
 
                     # If lower or equal precendence, also handles exponent (evals right to left)
-                    while (not operator_stack.isEmpty() and operator_stack.get().type is not TokenType.LPAREN
-                        and ((token.type is not TokenType.EXPONENT and operator_stack.get().precedence >= token.precedence)
+                    while (not operator_stack.isEmpty() and operator_stack.get().type != TokenType.LPAREN
+                        and ((token.type != TokenType.EXPONENT and operator_stack.get().precedence >= token.precedence)
                                 or (token.type is TokenType.EXPONENT and operator_stack.get().precedence > token.precedence) )
                     ):
                         # Parent node (top operator from stack)
@@ -82,10 +84,10 @@ class Expression(Node):
                     alg_state = 0
             # Handle Parenthesis
             elif token.type == TokenType.RPAREN:
-                if alg_state is not 1:
+                if alg_state != 1:
                     raise Exception(f"Invalid Expression, Expected Operator after {prev_token}")
                 # Pop all until LPAREN found
-                while (not operator_stack.isEmpty() and operator_stack.get().type is not TokenType.LPAREN):
+                while (not operator_stack.isEmpty() and operator_stack.get().type != TokenType.LPAREN):
                     parent = operator_stack.pop()
                     right = node_stack.pop()
                     left = node_stack.pop()
@@ -97,10 +99,10 @@ class Expression(Node):
                 operator_stack.pop()
 
             prev_token = token
-            #print('\nOperator Stack: ' + str(operator_stack.stack_list))
-            #print('Node Stack: ' + str(node_stack.stack_list))
+        #     print('\nOperator Stack: ' + str(operator_stack.stack_list))
+        #     print('Node Stack: ' + str(node_stack.stack_list))
 
-        #print('\nfinishing loop')
+        # print('\nfinishing loop')
 
         # Empty and build/connect rest of the tree after finishing all tokens
         while (not operator_stack.isEmpty()): 
@@ -111,6 +113,9 @@ class Expression(Node):
 
             right = node_stack.pop()
             left = node_stack.pop()
+
+            if parent == None or right == None or left == None:
+                raise Exception("Invalid Expression.")
 
             sub_tree = BinaryTree(parent, left, right)
             node_stack.push(sub_tree)
@@ -133,7 +138,7 @@ class Expression(Node):
             return 0
 
         # Is a leaf node (Reached bottom)
-        if type(binary_tree_node) is not BinaryTree:
+        if type(binary_tree_node) != BinaryTree:
             return binary_tree_node.value
 
         left_sum = self.evaluate(binary_tree_node.get_left_tree())
@@ -155,8 +160,8 @@ class Expression(Node):
     def print_preorder(self, tree=True, depth=0):
         if tree is True:
             tree = self.__tree_root
-        if tree is not None:
-            if type(tree) is not BinaryTree:
+        if tree != None:
+            if type(tree) != BinaryTree:
                 # print(('-') * depth + str(tree.value))
                 print(('— ') * depth + str(tree))
             else:
@@ -167,8 +172,8 @@ class Expression(Node):
     def print_postorder(self, tree=True, depth=0):
         if tree is True:
             tree = self.__tree_root
-        if tree is not None:
-            if type(tree) is not BinaryTree:
+        if tree != None:
+            if type(tree) != BinaryTree:
                 print(('— ') * depth + str(tree.value))
             else:
                 self.print_postorder(tree.get_left_tree(), depth+1)
@@ -178,8 +183,8 @@ class Expression(Node):
     def print_inorder(self, tree=True, depth=0): 
         if tree is True:
             tree = self.__tree_root
-        if tree is not None:
-            if type(tree) is not BinaryTree:
+        if tree != None:
+            if type(tree) != BinaryTree:
                 print(('— ') * depth + str(tree.value))
             else:
                 self.print_inorder(tree.get_left_tree(), depth+1)
