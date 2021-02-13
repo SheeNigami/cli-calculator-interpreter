@@ -38,6 +38,7 @@ class CLInterface:
         while exp_str is None:
             exp_str = input('Please enter the expression you want to evaluate:\n')
             try:
+                exp_str = exp_str.replace(' ', '')
                 expression = Expression(exp_str)
                 expression.parse_tree()
             except Exception as e:

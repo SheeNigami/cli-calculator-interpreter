@@ -24,11 +24,12 @@ class Expression(Node):
     # Parse tokens into tree with shunting-yard algorithm
     # TODO: Pron turn tree into its own class with variables operator and node stack, can also separate build sub_tree method to reduce duplicate code
     def parse_tree(self):
+        prev_token = None
         # Stacks to hold operators/operands for alg
         operator_stack = Stack()        
         node_stack = Stack()
         print('Tokens: ' + str(self.__tokens))
-        for token in self.__tokens:
+        for i, token in enumerate(self.__tokens):
             # Push Operands into operand_stack, operators to operator_stack
             if token.type == TokenType.LPAREN:
                 operator_stack.push(token)
@@ -36,26 +37,55 @@ class Expression(Node):
                 node_stack.push(token)
             # For operators
             elif token.precedence > 0:
-                # If lower or equal precendence, also handles exponent (evals right to left)
-                while (not operator_stack.isEmpty() and operator_stack.get().type is not TokenType.LPAREN
-                       and ((token.type is not TokenType.EXPONENT and operator_stack.get().precedence >= token.precedence)
-                            or (token.type is TokenType.EXPONENT and operator_stack.get().precedence > token.precedence) )
-                ):
-                    # Parent node (top operator from stack)
-                    parent = operator_stack.pop()
+                if token.type == TokenType.MINUS:
+                    # If unary, find next number and edit it to negative
+                    if prev_token.type != TokenType.NUMBER or prev_token.type == TokenType.RPAREN:
+                        for j in range(i+1, len(self.__tokens)):
+                            if self.__tokens[j].type == TokenType.NUMBER:
+                                self.__tokens[j].value = -self.__tokens[j].value
+                                break
+                    else:
+                        # If lower or equal precendence, also handles exponent (evals right to left)
+                        while (not operator_stack.isEmpty() and operator_stack.get().type is not TokenType.LPAREN
+                            and ((token.type is not TokenType.EXPONENT and operator_stack.get().precedence >= token.precedence)
+                                    or (token.type is TokenType.EXPONENT and operator_stack.get().precedence > token.precedence) )
+                        ):
+                            # Parent node (top operator from stack)
+                            parent = operator_stack.pop()
 
-                    # Get top operands from stack
-                    n1 = node_stack.pop()
-                    n2 = node_stack.pop()
+                            # Get top operands from stack
+                            n1 = node_stack.pop()
+                            n2 = node_stack.pop()
 
-                    # Add subnodes to tree
-                    sub_tree = BinaryTree(parent, n2, n1)
+                            # Add subnodes to tree
+                            sub_tree = BinaryTree(parent, n2, n1)
 
-                    # Append to whole tree (node stack)
-                    node_stack.push(sub_tree)
+                            # Append to whole tree (node stack)
+                            node_stack.push(sub_tree)
 
-                # Push currrent token to opeartor stack
-                operator_stack.push(token)
+                        # Push currrent token to operator stack
+                        operator_stack.push(token)
+                else:
+                    # If lower or equal precendence, also handles exponent (evals right to left)
+                    while (not operator_stack.isEmpty() and operator_stack.get().type is not TokenType.LPAREN
+                        and ((token.type is not TokenType.EXPONENT and operator_stack.get().precedence >= token.precedence)
+                                or (token.type is TokenType.EXPONENT and operator_stack.get().precedence > token.precedence) )
+                    ):
+                        # Parent node (top operator from stack)
+                        parent = operator_stack.pop()
+
+                        # Get top operands from stack
+                        n1 = node_stack.pop()
+                        n2 = node_stack.pop()
+
+                        # Add subnodes to tree
+                        sub_tree = BinaryTree(parent, n2, n1)
+
+                        # Append to whole tree (node stack)
+                        node_stack.push(sub_tree)
+
+                    # Push currrent token to operator stack
+                    operator_stack.push(token)
             # Handle Parenthesis
             elif token.type == TokenType.RPAREN:
                 # Pop all until LPAREN found
@@ -70,6 +100,7 @@ class Expression(Node):
                 # Remove LPAREN
                 operator_stack.pop()
 
+            prev_token = token
             print('\nOperator Stack: ' + str(operator_stack.stack_list))
             print('Node Stack: ' + str(node_stack.stack_list))
 
@@ -127,9 +158,9 @@ class Expression(Node):
         if tree is not None:
             if type(tree) is not BinaryTree:
                 # print(('-') * depth + str(tree.value))
-                print(('-') * depth + str(tree))
+                print(('— ') * depth + str(tree))
             else:
-                print(('-') * depth + str(tree.get_key()))
+                print(('— ') * depth + str(tree.get_key()))
                 self.print_preorder(tree.get_left_tree(), depth+1)
                 self.print_preorder(tree.get_right_tree(), depth+1)
 
@@ -138,21 +169,21 @@ class Expression(Node):
             tree = self.__tree_root
         if tree is not None:
             if type(tree) is not BinaryTree:
-                print(('-') * depth + str(tree.value))
+                print(('— ') * depth + str(tree.value))
             else:
                 self.print_postorder(tree.get_left_tree(), depth+1)
                 self.print_postorder(tree.get_right_tree(), depth+1)
-                print(('-') * depth + str(tree.get_key()))
+                print(('— ') * depth + str(tree.get_key()))
 
     def print_inorder(self, tree=True, depth=0): 
         if tree is True:
             tree = self.__tree_root
         if tree is not None:
             if type(tree) is not BinaryTree:
-                print(('-') * depth + str(tree.value))
+                print(('— ') * depth + str(tree.value))
             else:
                 self.print_inorder(tree.get_left_tree(), depth+1)
-                print(('-') * depth + str(tree.get_key()))
+                print(('— ') * depth + str(tree.get_key()))
                 self.print_inorder(tree.get_right_tree(), depth+1)
 
     # Overloading operators

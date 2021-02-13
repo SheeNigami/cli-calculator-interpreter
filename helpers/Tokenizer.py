@@ -30,7 +30,6 @@ class Token:
             TokenType.DIVIDE : 2,
             TokenType.EXPONENT : 3
         }
-
         self.precedence = precedences[self.type]
 
     
