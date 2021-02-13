@@ -52,6 +52,8 @@ DIGITS = '0123456789'
 
 class Tokenizer:
     def __init__(self, text): 
+        if text == "":
+            raise Exception("Please input an expression")
         # Iteration of text
         self.text = iter(text)
         self.advance()
